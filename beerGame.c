@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int back, i, n[11], months;
+int back, i, months;
 float store;
-static float flag=0;
+static float score=0;
 static int s;
 
 
                                                                                 //FactoryCode
-int factory(){
+int factory(int orderList[]){
     int inventory = 0, j = 40;
                                                                                 //Output::factory
     for (i = 0; i <= months; i++){
@@ -20,10 +20,10 @@ int factory(){
 
         printf  ("\n\nMONTH %d", i+1);
         printf ("\ninventory this month: %d", inventory);
-        printf ("\nIncoming order: %d", n[i]);
+        printf ("\nIncoming order: %d", orderList[i]);
 
-        if (inventory<n[i]){
-           back=(n[i]-inventory);
+        if (inventory<orderList[i]){
+           back=(orderList[i]-inventory);
            inventory=0;
            printf ("\nhow many do you want to manufacture [<20]: ");
            scanf ("%d", &j);
@@ -34,22 +34,22 @@ int factory(){
         else
             {printf ("\nhow many do you want to manufacture[<20]: ");
             scanf ("%d", &j);
-            store=(inventory-n[i])*0.5;
-            inventory-=n[i], back=0;
+            store=(inventory-orderList[i])*0.5;
+            inventory-=orderList[i], back=0;
             printf ("BACKLOG:%d\nstore:%f", back, store);}
 
-        flag+=(back+store);
+        score+=(back+store);
 
 
     }
-    printf ("\n\nSCORE: %f", flag);
+    printf ("\n\nSCORE: %f", score);
     return 0;
 }
 
 
                                                                                 //DistributorWholesalerRetailerCode
- int distributor_wholesaler_retailer(){
-    int inventory[11], j=0;
+ int distributor_wholesaler_retailer(int orderList[]){
+    int inventory[months], j=0;
                                                                                 //Inventory::defense::0
     for(i=0; i<= months; i++){
       if(i<=0)
@@ -58,80 +58,87 @@ int factory(){
       inventory[i]=0;
       }
 
-    for (i=0;i<=months;i++){
+    for (i=0; i <= months; i++){
 
         printf  ("\n\nMONTH %d", i+1);
         printf ("\nInventory this month: %d", inventory[i]);
-        printf ("\nIncoming order: %d", n[i]);
+        printf ("\nIncoming order: %d", orderList[i]);
         // printf ("\nexpected arrivals: %d", inventory[i+1]);
 
-               if (inventory[i]>n[i]){
+               if (inventory[i]>orderList[i]){
                                 back=0;
-                                inventory[i]=inventory[i]-n[i];
+                                inventory[i]=inventory[i]-orderList[i];
                                 inventory[i+1]+=inventory[i];
                                 store=0.5*inventory[i];
                                 printf("\nBACKLOG:%d\nstore:%f", back, store);
                                 }
                else{
-                    back=n[i]-inventory[i];
+                    back=orderList[i]-inventory[i];
                     inventory[i]=0;
                     store=0;
                     printf("\nBACKLOG:%d\nstore:%f", back, store);
                     }
-        flag+=(back+store);
+        score+=(back+store);
 
         printf ("\nPlace your order: ");
         scanf ("%d", &j);
         inventory[i+1]+=j;
                      }
 
-        printf ("\nSCORE: %f", flag);
+        printf ("\nSCORE: %f", score);
         return 0;
         }
 
-void roleSwitch(){                                                              //role switch: duh!!
+void roleSwitch(int orderList[]){                                                              //role switch: duh!!
+
+  printf ("\n\nPlease enter,\n1 for factory,\n2 for distributor,\n3 for wholesaler,\n4 for retailer:\n");
+  scanf ("%d", &s);
+
   switch(s){
 
         case 1:
-              factory();
+              factory(orderList);
               break;
 
         case 2:
-              distributor_wholesaler_retailer();
+              distributor_wholesaler_retailer(orderList);
               break;
 
         case 3:
-              distributor_wholesaler_retailer();
+              distributor_wholesaler_retailer(orderList);
               break;
 
         case 4:
-              distributor_wholesaler_retailer();
+              distributor_wholesaler_retailer(orderList);
               break;
 
         default:
-              roleSwitch();
+              printf("\n\nWrong option, please select from the following list: ");
+              roleSwitch(orderList);
               break;
               };
             }
 
                                                                                 //COMMAND::FUNC::MAIN
 int main(void){
+    int killSwitch = 1;
                                                                                 //INPUT::Coordinator
     printf ("Type in number of months, you want the game to be of: ");
     scanf("%d", &months);
 
+    int orderList[months];
+
     printf ("Type in %d orders: \n", months);
-    for(--months, i=0; i <= months ; scanf ("%d", &n[i]), i++){}
+    for(--months, i=0; i <= months ; scanf ("%d", &orderList[i]), i++){}
                                                                                 //Display.switch.sector
-        system("cls");
-        system ("color 3f");                                                    //Colour.Code
+    system("cls");
+    system ("color 3f");                                                        //Colour.Code
 
                                                                                 //INPUT::Player::GameBegins
-        printf ("\t\t* T H E  b E E R  G A M E *");
-        printf ("\n\nPlease enter,\n1 for factory,\n2 for distributor,\n3 for wholesaler,\n4 for retailer:\n");
-        scanf ("%d", &s);
+    printf ("\t\t* T H E  b E E R  G A M E *");
 
-        roleSwitch();
+    roleSwitch(orderList);
 
-        for(;getchar(););                                                       //KillSwitch::[0]
+    //for(;getchar(););                                                        //KillSwitch::[0]
+    for(; killSwitch; scanf("%d", &killSwitch));
     }
