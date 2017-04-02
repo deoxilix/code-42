@@ -1,0 +1,12 @@
+{% if story_element.subtype == "vidible-video" %}
+  <div data-loader="jsembed" class="story__element__jsembed {% if story_element.subtype %} story-element-{{story_element.subtype}}{% endif %}" data-content="{{ story_element.embed_js }}">
+    <div class="vdb_player vdb_56df5bfce4b0ace49576418d56d5f795e4b0cef03a6cce7c" vdb_params="m.playback=click">
+        <script type='text/javascript' src="https://delivery.vidible.tv/jsonp/pid=56df5bfce4b0ace49576418d/vid={{story_element.metadata.vidible_video_id}}/56d5f795e4b0cef03a6cce7c.js?m.playback=click">
+    </script>
+   </div>
+  </div>
+{% else %}
+  <div data-loader="jsembed" class="story__element__jsembed {% if story_element.subtype %} story-element-{{story_element.subtype}}{% endif %}" data-content="{{ story_element.embed_js }}">
+  	{{ story_element.embed_js | base64_to_string }}
+  </div>
+{% endif %}
