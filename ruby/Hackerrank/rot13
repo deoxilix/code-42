@@ -1,0 +1,47 @@
+require 'pry'
+class String
+  def uppercase?
+    /[[:upper:]]/.match(self)
+  end
+
+  def lowercase?
+    /[[:lower:]]/.match(self)
+  end
+end
+
+module Rot13
+  class << self
+    def rotCipher(collection, n)
+      collection_temp = n.times {collection.rotate}
+      binding.pry
+
+      collection_temp
+          .zip(collection)
+          .to_h
+    end
+  end
+end
+
+Rot13::N = 13
+Rot13::CapLetters   = Rot13::rotCipher(('A'..'Z').to_a, Rot13::N)
+Rot13::SmallLetters = Rot13::rotCipher(('a'..'z').to_a, Rot13::N)
+
+
+def tokenize(rawCode)
+  rawCode.strip.split('')
+end
+
+def rot13(rawCode)
+  rawCode = tokenize(rawCode)
+  preCode = rawCode.map {|rawLetter|
+    if rawLetter =~ /[^a-zA-z]/
+    then
+      rawLetter
+    else
+      (rawLetter.uppercase? ? Rot13::CapLetters[rawLetter] : Rot13::SmallLetters[rawLetter])
+    end
+  }
+  p preCode.join
+end
+
+rot13(gets)
